@@ -7,8 +7,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "process": "node process.js",
     "bigrams": "node bigrams.js",
-    "calculate": "node calculate.js",
-    "characters": "node characters.js"
+    "calculate": "node calculateBigrams.js",
+    "characters": "node characters.js",
+    "calculateKeyboards": "node calculateKeyboards.js"
   },
   "author": "Aidan Kelley",
   "license": "MIT",

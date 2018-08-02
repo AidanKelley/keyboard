@@ -117,3 +117,117 @@ console.log(calculateBigramsForGroup(qwertyLeft, bigrams));
 console.log(calculateBigramsForGroup(qwertyRight, bigrams));
 console.log(calculateBigramsForGroup(dvorakLeft, bigrams));
 console.log(calculateBigramsForGroup(dvorakRight, bigrams));
+
+let group = dvorakLeft, opposite = dvorakRight, response;
+
+for(let i = 0; i < 10; i++) {
+    response = findSwitch(group, opposite);
+    group = response.group;
+    opposite = response.opposite;
+
+    // console.log(cost(group, opposite));
+}
+
+function randomGroup(size) {
+    let copy = chars + "", out = "";
+
+    for(let i = 0; i < size; i++) {
+        let index = Math.floor(Math.random() * copy.length);
+        out += copy.charAt(index);
+
+        copy = copy.substring(0, index) + copy.substring(index + 1);
+
+    }
+
+    return {group:out, opposite: copy};
+}
+
+function cost(group, opposite) {
+    return calculateBigramsForGroup(group, bigrams) + calculateBigramsForGroup(opposite, bigrams);
+}
+
+function diff(group, opposite) {
+    //estimates the change in cost if a letter switched to the other group
+
+    let letters = {}, letter = "", cost = 0;
+
+    for(let i = 0; i < group.length; i++) {
+        letter = group.charAt(i);
+        cost = 0;
+        for(let j = 0; j < group.length; j++) {
+            cost -= bigrams[letter][group.charAt(j)]
+        }
+
+        for(let j = 0; j < opposite.length; j++) {
+            cost += bigrams[letter][opposite.charAt(j)]
+        }
+
+        letters[letter] = cost;
+    }
+
+    // console.log(letters);
+
+    return letters;
+}
+
+function minChar(letters) {
+    let keys = Object.keys(letters);
+    let minLetter = keys[0], min = letters[minLetter];
+
+    for(let i = 0; i < keys.length; i++) {
+        let key = keys[i];
+
+        if(letters[key] < min) {
+            min = letters[key];
+            minLetter = key;
+        }
+    }
+
+    return minLetter;
+}
+
+function findSwitch(group, opposite) {
+    let minGroup = minChar(diff(group, opposite)), minOpposite = minChar(diff(opposite, group));
+
+    // console.log(minGroup + " <=> " + minOpposite);
+
+    group = group.replace(minGroup, minOpposite);
+    opposite = opposite.replace(minOpposite, minGroup);
+
+    return {group, opposite};
+}
+
+
+let minGroup = "", minCost = 1;
+
+for(let i = 0; i < 10000; i++) {
+    let {group, opposite} = randomGroup(15);
+    let oldCost = 1, newCost = 1;
+
+    let count = 0;
+    do {
+        count ++;
+        oldCost = newCost;
+
+        let response = findSwitch(group, opposite);
+
+        group = response.group;
+        opposite = response.opposite;
+
+        newCost = cost(group, opposite);
+    } while(oldCost > newCost);
+
+    // console.log(group + " " + newCost);
+
+    let response = findSwitch(group, opposite);
+
+    group = response.group;
+    opposite = response.opposite;
+
+    if(oldCost < minCost) {
+        minCost = oldCost;
+        minGroup = group;
+    }
+}
+
+console.log(minGroup + " " + minCost);
