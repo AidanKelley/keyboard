@@ -1,0 +1,18 @@
+{
+  "name": "keyboard",
+  "version": "0.0.1",
+  "description": "Trying to apply modern, big data methods to the creation of a better keyboard",
+  "main": "bigrams.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "process": "node process.js",
+    "bigrams": "node bigrams.js",
+    "calculate": "node calculate.js",
+    "characters": "node characters.js"
+  },
+  "author": "Aidan Kelley",
+  "license": "MIT",
+  "dependencies": {
+    "readline": "^1.3.0"
+  }
+}
